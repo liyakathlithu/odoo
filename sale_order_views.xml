@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<record model="ir.ui.view" id="view_order_form_inherit">
+		<field name="name">sale.order.form.inherit</field>
+		<field name="model">sale.order</field>
+		<field name="inherit_id" ref="sale.view_order_form" />
+		<field name="arch" type="xml">
+
+			<xpath expr="//header" position="inside">
+				<button
+					name="%(action_sale_wizard)d"
+					type="action"
+					string="Update "
+					class="oe_highlight" />
+			</xpath>
+			
+			<div name="button_box">
+							<button name="action_view_sale_order" type="object"
+								class="oe_stat_button" icon="fa-eye"
+								string="Liked Food Items">
+								<field name="food_count" widget="statinfo" />
+							</button>
+						</div>
+			<xpath expr="//field[@name='partner_id']" position="before">
+				<field name="sequence" readonly="1"/>
+			</xpath>
+			<xpath expr="//field[@name='partner_id']" position="after">
+				<field name="email" />
+			</xpath>
+			<xpath expr="//field[@name='email']" position="after">
+				<field name="sale_ph_no" />
+			</xpath>
+			<xpath expr="//field[@name='sale_ph_no']" position="after">
+				<field name="product_ids" widget="many2many_tags" domain="[('is_food', '=', True)]" options="{'no_create': True, 'no_create_edit':True}"/>
+			</xpath>
+			<xpath expr="//field[@name='date_order']" position="after">
+				<field name="table" readonly="1"/>
+			</xpath>
+			<xpath expr="//field[@name='table']" position="after">
+				<field name="waiter_id" readonly="1"/>
+			</xpath>
+			<xpath expr="//field[@name='sale_order_template_id']"
+				position="attributes">
+				<attribute name="invisible">1</attribute>
+			</xpath>
+			<xpath expr="//field[@name='validity_date']" position="attributes">
+				<attribute name="invisible">1</attribute>
+			</xpath>
+			<xpath expr="//field[@name='payment_term_id']" position="attributes">
+				<attribute name="invisible">1</attribute>
+			</xpath>
+
+			<xpath expr="//button[@name='action_view_delivery']"
+				position="attributes">
+				<attribute name="invisible">1</attribute>
+			</xpath>
+
+			<xpath expr="//button[@name='action_view_invoice']"
+				position="attributes">
+				<attribute name="invisible">1</attribute>
+			</xpath>
+
+			<!--<xpath expr="//header" position="inside">
+        		<button 
+							name="action_email" 
+							type="object" 
+							string="Send Mail"
+							class="oe_highlight"/>
+			</xpath>-->
+			<xpath expr="//header" position="inside">
+			<button
+							name="action_generate_xlsx_report"
+							type="object"
+							string="XLSX Report Bill"
+							class="oe_highlight"/>
+			</xpath>
+		</field>
+	</record>
+
+</odoo>  

@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+	
+		<record id="waiter_tree_view" model="ir.ui.view">
+			<field name="name">waiter.tree</field>
+			<field name="model">waiter</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="name" />
+					
+				</tree>
+			</field>
+		</record>
+	
+		<record id="waiter_form_view" model="ir.ui.view">
+			<field name="name">waiter.form</field>
+			<field name="model">waiter</field>
+			<field name="arch" type="xml">
+				<form>
+					<header>
+						<field name="state" widget="statusbar" />
+						<button name="action_order"
+							type="object"
+							string="Order"
+							class="oe_highlight"
+							groups="restaurant.group_show_draft"/>
+
+						<button name="action_inprogress"
+							type="object"
+							string="Inprogress"
+							class="btn-danger"
+							confirm="Are you sure to order?"/>
+
+						<button name="action_completed"
+							type="object"
+							string="Ready to serve"
+							class="btn-success"
+							groups="restaurant.group_show_readytoserve"/>
+					</header>
+					<sheet>
+							<group>
+							<group>
+							<field name="name"/>
+							<!--<field name="sequence" readonly="1" />-->
+                			<field name="cust_name" required="1"/>
+                			<field name="ph_no"/>
+                			</group>
+                			<group>
+                			<field name="date"/>
+                			<field name="countdown_end" widget="datetime"/>
+                        	<field name="remaining_time" readonly="1"/>
+                			</group>
+                			</group>
+                			<notebook>
+                			<page name="products_list" string="orders">
+                			<field name="line_ids" widget="one2many_tags">
+                			<tree editable="bottom" >
+                			
+                			<field name="product_id" domain="[('is_food', '=', True)]" options="{'no_create': True, 'no_create_edit':True}"/>
+                			<field name="product_variant_id" column_invisible="1"/>
+                			<field name="product_category" />
+                			
+                			<field name="desc" />
+                			<field name="quantity" />
+                			<field name="list_price" />
+                			<field name="sub_total" sum="Total"/>
+                			<field name="served" />
+                			<field name="recently_prepared" />
+                			</tree>
+                			</field>
+                			</page>
+                			</notebook>
+                			<button name="action_checkout" 
+                					type="object"
+									string="Checkout" 
+									class="btn-primary" 
+									invisible="state not in ('readytoserve')"
+									groups="restaurant.group_show_checkout" />
+						
+					</sheet>
+				</form>
+			</field>
+		</record>
+	
+	<record id="waiter_kanban_view" model="ir.ui.view">
+			<field name="name">waiter.kanban</field>
+			<field name="model">waiter</field>
+			<field name="arch" type="xml">
+				<kanban class="o_kanban_mobile" sample="1" quick_create="false">
+					<field name="name" />
+					<field name="cust_name" />
+					<templates>
+						<t t-name="kanban-box">
+							<div
+								t-attf-class="oe_kanban_card oe_kanban_global_click">
+								<div class="o_kanban_record_top mb16">
+									<div class="o_kanban_record_headings mt4" style="background-color: #f0f0f0; padding: 5px; border-radius: 5px;">
+										<strong class="o_kanban_record_title">
+											<span t-out="record.name.value" style="color: #007bff;" />
+										</strong>
+									</div>
+									
+								</div>
+								<div class="o_kanban_record_bottom">
+								<strong>
+										<span t-out="record.cust_name.value" />
+									</strong>
+									<div
+										class="oe_kanban_bottom_left text-muted">
+									</div>
+									<div class="oe_kanban_bottom_right">
+										<field name="state"
+											widget="label_selection"
+											options="{'classes': {'order': 'info', 'inprogress': 'success', 'readytoserve': 'danger'}}" />
+									</div>
+								</div>
+							</div>
+						</t>
+					</templates>
+				</kanban>
+			</field>
+		</record>
+	
+	<record id="waiter_graph_view" model="ir.ui.view">
+			<field name="name">waiter.graph</field>
+			<field name="model">waiter</field>
+			<field name="arch" type="xml">
+				<graph string="waiter Analysis" type="bar">
+					<!--  You can change type to 'line' or 'pie'  -->
+					<!--<field name="name" type="col" />-->
+					<!--  Aggregation field (e.g., sum of age)  -->
+					<!--<field name="gender" type="row" />-->
+					<!--  Group by field  -->
+					<field name="name" />
+					<field name="cust_name" />
+					<field name="state" />
+				</graph>
+			</field>
+		</record>
+	
+	<record id="waiter_pivot_view" model="ir.ui.view">
+			<field name="name">waiter.pivot</field>
+			<field name="model">waiter</field>
+			<field name="arch" type="xml">
+				<pivot string="Waiter Pivot View">
+					<!--  Grouping by 'name' and 'state'  -->
+					<field name="name" type="row" />
+					<field name="state" type="col" />
+					<!--  Measure field (used for aggregation, e.g., sum of ages)  -->
+					<!--<field name="age" type="measure" />-->
+					<!--  Add more measure or row fields as needed  -->
+				</pivot>
+			</field>
+		</record>
+	
+	<record id="waiter_calendar_view" model="ir.ui.view">
+			<field name="name">waiter.calendar</field>
+			<field name="model">waiter</field>
+			<field name="arch" type="xml">
+				<calendar string="Waiter Calendar View" date_start="date">
+					<!--  Event title  -->
+					<field name="name" />
+					<!--  Optional: State field to color code events  -->
+					<field name="state" />
+					<!--  You can group events by state, or any other field  -->
+				</calendar>
+			</field>
+		</record>
+	
+	<record id="waiter_search_view" model="ir.ui.view">
+			<field name="name">waiter.search</field>
+			<field name="model">waiter</field>
+			<field name="arch" type="xml">
+				<search>
+					<field name="name" />
+					<field name="cust_name" />
+					<field name="line_ids" />
+					<field name="state" />
+					<filter string="State" name="order_in_state"
+						context="{'group_by': 'state'}" />
+
+					<filter string="Reserved Tables" name="filter_product_in_tables"
+						domain="[('line_ids.product_id', '!=', False)]" />
+					
+				</search>
+			</field>
+		</record>
+
+		<record id="action_order" model="ir.actions.server">
+			<field name="name">Order State</field>
+			<field name="model_id" ref="model_waiter" />
+			<field name="binding_model_id" ref="model_waiter" />
+			<field name="state">code</field>
+			<field name="code">
+				if records:
+				action = records.action_order()
+			</field>
+		</record>
+
+		<record id="action_inprogress" model="ir.actions.server">
+			<field name="name">In Progress State</field>
+			<field name="model_id" ref="model_waiter" />
+			<field name="binding_model_id" ref="model_waiter" />
+			<field name="state">code</field>
+			<field name="code">
+				if records:
+				action = records.action_inprogress()
+			</field>
+		</record>
+	
+		<record id="action_waiter" model="ir.actions.act_window">
+			<field name="name">waiter</field>
+			<field name="res_model">waiter</field>
+			<field name="view_mode">kanban,tree,form,graph,pivot,calendar</field>
+		</record>
+	</data>
+</odoo>
